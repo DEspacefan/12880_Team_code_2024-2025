@@ -156,6 +156,7 @@ public class Teleop extends LinearOpMode {
 
 
 
+
         waitForStart();
         runtime.reset();
 
@@ -238,7 +239,7 @@ public class Teleop extends LinearOpMode {
             if (gamepad2.right_bumper) {
                 claw.setPosition(1);
             }
-            if (gamepad2.x){
+            if (gamepad2.y){
                 claw.setPosition(.4);
             }
 
