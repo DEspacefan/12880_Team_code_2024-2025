@@ -31,6 +31,7 @@ public final class Autonomous_PARK_RIGHT extends LinearOpMode {
         ArmLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         ArmLift.setTargetPosition(0);
         ArmLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        claw.setPosition(0);
 
         Pose2d beginPose = new Pose2d(-12.66, 67.75, Math.toRadians(-90));
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);

@@ -219,7 +219,7 @@ public class Teleop extends LinearOpMode {
                 Armtarget = Armtarget + 50;
             } else if (Armtarget <= -5000) {
                 Armtarget = -5000;
-            } else if (gamepad2.y) {
+            } else if (gamepad2.x) {
                 Armtarget=-2000;
             }
             if (button == 1){
@@ -240,7 +240,7 @@ public class Teleop extends LinearOpMode {
                 claw.setPosition(1);
             }
             if (gamepad2.y){
-                claw.setPosition(.4);
+                claw.setPosition(.3);
             }
 
 
