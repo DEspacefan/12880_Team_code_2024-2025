@@ -9,9 +9,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="Autonomous_V2_BETA", group="Linear OpMode")
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="Autonomous_V2_STABLE", group="Linear OpMode")
 @Config
-public final class Autonomous_V2_BETA extends LinearOpMode {
+public final class Autonomous_V2_STABLE extends LinearOpMode {
 
     public static double x1= 55.90;
     public static double x2= 70.90;
