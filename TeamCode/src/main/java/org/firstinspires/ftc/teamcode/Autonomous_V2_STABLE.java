@@ -2,7 +2,9 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
+import com.acmerobotics.roadrunner.VelConstraint;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -57,12 +59,12 @@ public final class Autonomous_V2_STABLE extends LinearOpMode {
         clawZ.setPosition(-1);
         double down = side;
 
-        Pose2d beginPose = new Pose2d(16.19, 62.22, Math.toRadians(-90));
+        Pose2d beginPose = new Pose2d(11.19, 62.22, Math.toRadians(-90));
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
 
         waitForStart();
         claw.setPosition(1);
-        clawY.setPosition(down);
+        clawY.setPosition(1);
         clawZ.setPosition(-1);
         ArmLift.setPower(-1);
         while (!Armbutton.isPressed()){
@@ -72,14 +74,20 @@ public final class Autonomous_V2_STABLE extends LinearOpMode {
         ArmLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         ArmExtend.setPower(1);
         ArmLift.setPower(1);
-        ArmLift.setTargetPosition(2000);
-        ArmExtend.setTargetPosition(2000);
+        ArmLift.setTargetPosition(2500);
+
+        ArmExtend.setTargetPosition(2100);
         clawY.setPosition(1);
+        sleep(500);
         Actions.runBlocking(
                 drive.actionBuilder(beginPose)
-                        .splineToConstantHeading(new Vector2d(16.19,50), Math.toRadians(270))
+                        .splineToConstantHeading(new Vector2d(11.19,50), Math.toRadians(270))
                         .build());
         Pose2d twoPose = drive.pose;
+        ArmLift.setTargetPosition(1900);
+        sleep(500);
+        claw.setPosition(0);
+        sleep(500);
         ArmExtend.setTargetPosition(300);
         ArmLift.setTargetPosition(0);
         clawY.setPosition(down);
