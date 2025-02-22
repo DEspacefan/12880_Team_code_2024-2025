@@ -99,6 +99,8 @@ public class Teleop extends LinearOpMode {
     private DcMotor ArmExtend = null;
     private Servo claw = null;
     private TouchSensor Armbutton = null;
+    private Servo clawZ;
+    private Servo clawY;
 
 
 
@@ -114,8 +116,10 @@ public class Teleop extends LinearOpMode {
         rightBackDrive = hardwareMap.get(DcMotor.class, "RR/BO");
         ArmLift = hardwareMap.get(DcMotor.class,"Arm lift"); // Arm Angle 0 thru -2000?
         ArmExtend = hardwareMap.get(DcMotor.class,"Arm extender"); // Arm Extends
-        claw = hardwareMap.get(Servo.class,"claw");
+        claw = hardwareMap.get(Servo.class,"Grip");
         Armbutton = hardwareMap.get(TouchSensor.class,"button");
+        clawZ=hardwareMap.get(Servo.class,"Twist");
+        clawY=hardwareMap.get(Servo.class,"Wrist");
 
 
         // ########################################################################################
@@ -132,8 +136,8 @@ public class Teleop extends LinearOpMode {
         rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
         leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
-        ArmExtend.setDirection(DcMotorSimple.Direction.REVERSE);
-        ArmLift.setDirection(DcMotorSimple.Direction.REVERSE);
+        ArmExtend.setDirection(DcMotorSimple.Direction.FORWARD);
+        ArmLift.setDirection(DcMotorSimple.Direction.FORWARD);
         leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -159,6 +163,7 @@ public class Teleop extends LinearOpMode {
 
         waitForStart();
         runtime.reset();
+        clawZ.setPosition(-1);
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
@@ -187,18 +192,25 @@ public class Teleop extends LinearOpMode {
 
             // Use this variable to apply limiter
             // If 0 -> -2300, ~> 45
-            armLimit = maxLegth(currentArmLiftPosition); //TODO: Replace 0 with current robot angle of arm variable
+
+                    //maxLegth(currentArmLiftPosition); //TODO: Replace 0 with current robot angle of arm variable
 
             //
             //Arm extend code
-
+            if (ArmLift.getCurrentPosition()<1000){
+                armLimit=2300;
+            }else armLimit=3200;
 
             //TODO: Currently just sets Arm target without checking max reach
-            if (ArmExtend.getCurrentPosition()<=-2900 && gamepad2.right_stick_y<0){
+            if (ArmExtend.getCurrentPosition()>=armLimit&& gamepad2.right_stick_y<0) {
                 ArmExtend.setPower(0);
-            } else if (ArmExtend.getCurrentPosition()>=0 && gamepad2.right_stick_y>0) {
+            } else if (ArmExtend.getCurrentPosition()>=armLimit+100) {
+                ArmExtend.setPower(-1);
+            } else if (ArmExtend.getCurrentPosition()<=0 && gamepad2.right_stick_y>0) {
                 ArmExtend.setPower(0);
-            }else ArmExtend.setPower(gamepad2.right_stick_y);
+            }else ArmExtend.setPower(-gamepad2.right_stick_y);
+
+
 
             //arm button lift code
             if (Armbutton.isPressed()) {
@@ -207,20 +219,18 @@ public class Teleop extends LinearOpMode {
 
             //TODO: Name the function
             ArmLift.setPower(1); //Set power to arm
-            if (gamepad2.b) {
-                Armtarget = -4500;
-            } else if (gamepad2.a){
+             if (gamepad2.a){
                 ArmLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 ArmLift.setPower(1);
                 Armtarget = 0;
             } else if (gamepad2.left_stick_y <=-.2) {
-                Armtarget = Armtarget - 50;
-            } else if (gamepad2.left_stick_y >=.2 && Armtarget<-100) {
                 Armtarget = Armtarget + 50;
-            } else if (Armtarget <= -5000) {
-                Armtarget = -5000;
+            } else if (gamepad2.left_stick_y >=.2 && Armtarget>100) {
+                Armtarget = Armtarget - 50;
+            } else if (Armtarget >= 5000) {
+                Armtarget = 5000;
             } else if (gamepad2.x) {
-                Armtarget=-2000;
+                Armtarget=2000;
             }
             if (button == 1){
                 ArmLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -239,6 +249,19 @@ public class Teleop extends LinearOpMode {
             if (gamepad2.right_bumper) {
                 claw.setPosition(1);
             }
+            if (gamepad2.dpad_down){
+                clawY.setPosition(.4);
+            }
+            if (gamepad2.dpad_up){
+                clawY.setPosition(1);
+            }
+            if (gamepad2.dpad_right){
+                clawZ.setPosition(1);
+            }
+            if (gamepad2.dpad_left){
+                clawZ.setPosition(-1);
+            }
+
             if (gamepad2.y){
                 claw.setPosition(.3);
             }
